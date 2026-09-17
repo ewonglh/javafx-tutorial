@@ -24,6 +24,7 @@ public class Main extends Application {
             this.getClass().getResourceAsStream("/images/DaUser.png"));
     private final Image dukeImage = new Image(
             this.getClass().getResourceAsStream("/images/DaDuke.png"));
+    private final Duke duke = new Duke();
 
     @Override
     public void start(Stage stage) {
@@ -70,7 +71,30 @@ public class Main extends Application {
         AnchorPane.setLeftAnchor(userInput, 1.0);
         AnchorPane.setBottomAnchor(userInput, 1.0);
 
+        sendButton.setOnMouseClicked(event -> {
+            handleUserInput();
+        });
+        userInput.setOnAction(event -> {
+            handleUserInput();
+        });
+
+        dialogContainer.heightProperty().addListener((observable, oldHeight, newHeight) -> {
+            scrollPane.setVvalue(1.0);
+        });
+
         stage.setScene(scene);
         stage.show();
+    }
+
+    /**
+     * Adds the user's message and Duke's response to the dialog container.
+     */
+    private void handleUserInput() {
+        String userText = userInput.getText();
+        String dukeText = duke.getResponse(userText);
+        dialogContainer.getChildren().addAll(
+                DialogBox.getUserDialog(userText, userImage),
+                DialogBox.getDukeDialog(dukeText, dukeImage));
+        userInput.clear();
     }
 }
